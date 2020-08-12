@@ -1,0 +1,111 @@
+// Import the simpletest.js javascript
+<script src="./simpletest.js"></script>
+
+<script>
+/**
+ *
+ * myIsPrototypeOf() checks if an object exists 
+ * in another object's prototype chain.
+ *  
+ * Function signature:
+ * myIsPrototypeOf(prototypeObject, prototypeChainToSearch)
+ * 
+ * prototypeObject: the object the function searches for
+ * prototypeChainToSearch: the object whose prototype chain will be searched upwards
+ * 
+ * Retrun value: 
+ * A Boolean indicating whether the calling object lies in 
+ * the prototype chain of the specified object.
+ * 
+ *  var canine = {};
+ *  var dog = Object.create(canine);
+ *  var myDog = Object.create(dog);
+ * 
+ *  var horse = {};
+ *  var myHorse = Object.create(horse)
+ * 
+ * Example of how recursion works in this function:
+ *  cycle |   prototypeObject |     prototypeChainToSearch       | result
+ * ==========================================================================
+ *     1  |    canine         |   myDog                          |   no , not null
+ *     2  |    canine         |   myDog.__proto__  ==> dog       |   yes
+ *        |                   |                                  |   true
+ *        |                   |                                  |
+ *        |                   |                                  |
+ *     1  |    canine         |   myHorse                        |   no, not null
+ *     2  |    canine         |   myHorse.__proto__  ==> horse   |   no, not null
+ *     3  |    canine         |   horse.__proto__  ==> null      |   no, null
+ *        |                   |                                  |   false
+*/
+
+function myIsPrototypeOf(prototypeObject, prototypeChainToSearch) {
+  if (typeof prototypeObject === 'undefined' || prototypeObject === null) {
+    throw new TypeError('prototypeObject is undefined or null')
+  }
+
+  // Base case: when prototypeObject is the prototype of prototypeChainToSearch
+  if (prototypeChainToSearch.__proto__ === prototypeObject) {
+    return true
+  }
+
+  // Base case: when prototypeChainToSearch.__proto__ == null, we have reached the end of chain
+  if (prototypeChainToSearch.__proto__ === null) {
+    return false 
+  }
+
+  // Otherwise, select the prototype of the prototypeChainToSearch
+  var newPrototypeChainToSearch = prototypeChainToSearch.__proto__
+
+  // Recursively search up the prototype chain
+  return myIsPrototypeOf(prototypeObject, newPrototypeChainToSearch);
+
+}
+
+
+
+// Tests to be used with simpletest.js
+tests({
+  'It should throw a TypeError if prototypeObject is undefined or null.':function() {
+    var prototypeChainToSearch = {};
+    
+    var prototypeObject = null;
+    try {
+      myIsPrototypeOf(prototypeObject, prototypeChainToSearch)  
+    } catch (error) {
+      eq(error.toString().includes('TypeError'), true)
+    }
+
+    var prototypeObject2 = null;
+    try {
+      myIsPrototypeOf(prototypeObject2, prototypeChainToSearch)  
+    } catch (error) {
+      eq(error.toString().includes('TypeError'), true)
+    }
+  },
+  'It should return true if the prototypeObject is in the prototype chain.':function() {
+    var prototypeObject = {}
+    var prototypeChainToSearch = Object.create(prototypeObject)
+
+    var result = myIsPrototypeOf(prototypeObject, prototypeChainToSearch);
+    eq(result, true)
+    
+  },
+  'It should be able to traverse multiple layers of prototypes':function() {
+    var canine = {};
+    var dog = Object.create(canine);
+    var myDog = Object.create(dog);
+
+    var result = myIsPrototypeOf(canine, myDog);
+    eq(result, true)
+  },
+  'It should return false if the prototypeObject is not in the prototype chain': function() {
+    var canine = {};
+    var bovine = {};
+    
+    var result = myIsPrototypeOf(canine, bovine);
+    eq(result, false)
+  }
+});
+</script> 
+
+
