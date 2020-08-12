@@ -4,8 +4,7 @@
 <script>
 /**
  *
- * myIsPrototypeOf() checks if an object exists 
- * in another object's prototype chain.
+ * myIsPrototypeOf() checks if an object exists in another object's prototype chain.
  *  
  * Function signature:
  * myIsPrototypeOf(prototypeObject, prototypeChainToSearch)
@@ -13,7 +12,7 @@
  * prototypeObject: the object the function searches for
  * prototypeChainToSearch: the object whose prototype chain will be searched upwards
  * 
- * Retrun value: 
+ * Return value: 
  * A Boolean indicating whether the calling object lies in 
  * the prototype chain of the specified object.
  * 
@@ -60,8 +59,6 @@ function myIsPrototypeOf(prototypeObject, prototypeChainToSearch) {
   return myIsPrototypeOf(prototypeObject, newPrototypeChainToSearch);
 
 }
-
-
 
 // Tests to be used with simpletest.js
 tests({
